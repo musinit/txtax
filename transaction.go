@@ -1,7 +1,7 @@
 package txtax
 
 type Transaction struct {
-	TimeStamp   int             `json:"timeStamp"`
+	TimeStamp   int64           `json:"timeStamp"`
 	Hash        string          `json:"hash"`
 	Amount      float32         `json:"amount"`
 	MarketValue float32         `json:"marketValue"`
