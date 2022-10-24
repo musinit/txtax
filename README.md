@@ -1,7 +1,7 @@
 <br>
 <img src="https://www.linkpicture.com/q/txtax-logo.png" alt="alt text" height="50">
 
-TxTax is a crypto transactions tax calculator. It analyzes transactions and provides data for tax reports.
+TxTax is a crypto transactions tax calculator. It analyzes transactions and provides data for tax reports. <br>Let's make smth like CoinTracker or Turbotax, but free and opensource!
 
 ### Features
  - Support any type of crypto currencies
