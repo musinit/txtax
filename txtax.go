@@ -84,7 +84,7 @@ func AnalyseCGL(transactions []Transaction, taxMethod TaxMethod) ([]TransactionT
 	accumulatedCGL := float32(0)
 	txTaxInfo := make([]TransactionTaxInfo, len(transactions))
 
-	for _, transaction := range transactions {
+	for i, transaction := range transactions {
 		if transaction.IsDisabled {
 			continue
 		}
@@ -95,10 +95,10 @@ func AnalyseCGL(transactions []Transaction, taxMethod TaxMethod) ([]TransactionT
 			continue
 		case TransactionTypeReward:
 			accumulatedCGL += transaction.Total()
-			txTaxInfo = append(txTaxInfo, TransactionTaxInfo{
+			txTaxInfo[i] = TransactionTaxInfo{
 				Transaction: transaction,
 				CGL:         transaction.Total(),
-			})
+			}
 		case TransactionTypeFork:
 		case TransactionTypeAirdrop:
 		case TransactionTypePayment:
@@ -161,10 +161,10 @@ func AnalyseCGL(transactions []Transaction, taxMethod TaxMethod) ([]TransactionT
 					}
 				}
 				accumulatedCGL += cgl
-				txTaxInfo = append(txTaxInfo, TransactionTaxInfo{
+				txTaxInfo[i] = TransactionTaxInfo{
 					Transaction: transaction,
 					CGL:         cgl,
-				})
+				}
 			}
 		}
 	}
