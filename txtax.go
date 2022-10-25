@@ -157,7 +157,7 @@ func AnalyseCGL(transactions []Transaction, taxMethod TaxMethod) ([]TransactionT
 							CGL:         0,
 							Error:       ErrNoCorrespondingDepositFound,
 						})
-						continue
+						break
 					}
 				}
 				accumulatedCGL += cgl
