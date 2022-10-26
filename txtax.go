@@ -86,7 +86,8 @@ func AnalyseCGL(transactions []Transaction, taxMethod TaxMethod) ([]TransactionT
 	accumulatedCGL := float32(0)
 	txTaxInfo := make([]TransactionTaxInfo, len(transactions))
 
-	for i, transaction := range transactions {
+	for i, tr := range transactions {
+		transaction := tr
 		if transaction.IsDisabled {
 			continue
 		}
