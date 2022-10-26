@@ -14,28 +14,28 @@ type Transaction struct {
 type TransactionType string
 
 var (
-	TransactionTypeGift     TransactionType = "gift"
-	TransactionTypeDonation TransactionType = "donation"
-	TransactionTypeStolen   TransactionType = "stolen"
-	TransactionTypeAirdrop  TransactionType = "airdrop"
-	TransactionTypeFork     TransactionType = "fork"
-	TransactionTypePayment  TransactionType = "payment"
-	TransactionTypeReward   TransactionType = "reward"
+	TransactionTypeGift     TransactionType = "GIFT"
+	TransactionTypeDonation TransactionType = "DONATION"
+	TransactionTypeStolen   TransactionType = "STOLEN"
+	TransactionTypeAirdrop  TransactionType = "AIRDROP"
+	TransactionTypeFork     TransactionType = "FORK"
+	TransactionTypePayment  TransactionType = "PAYMENT"
+	TransactionTypeReward   TransactionType = "REWARD"
 )
 
 type TxCategory string
 
 var (
-	TxCategoryDeposit  TxCategory = "deposit"
-	TxCategoryWithdraw TxCategory = "withdraw"
+	TxCategoryDeposit  TxCategory = "DEPOSIT"
+	TxCategoryWithdraw TxCategory = "WITHDRAW"
 )
 
 type TaxMethod string
 
 var (
-	TaxMethodFIFO TaxMethod = "fifo"
-	TaxMethodLIFO TaxMethod = "lifo"
-	TaxMethodHIFO TaxMethod = "hifo"
+	TaxMethodFIFO TaxMethod = "FIFO"
+	TaxMethodLIFO TaxMethod = "LIFO"
+	TaxMethodHIFO TaxMethod = "HIFO"
 )
 
 type Currency string
