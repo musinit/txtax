@@ -160,7 +160,7 @@ func AnalyseCGL(transactions []Transaction, taxMethod TaxMethod) ([]TransactionT
 					}
 					currTransactionAmount -= availableAmount
 
-					if currTransactionAmount > 0 && len(currencyDeposits) == 0 {
+					if currTransactionAmount > 0 && len(currencyDeposits) == 0 || (len(currencyDeposits) == 1 && currencyDeposits[0].Amount == 0) {
 						txTaxInfo[i] = TransactionTaxInfo{
 							Transaction: transaction,
 							CGL:         0,
