@@ -19,7 +19,9 @@ func CalculateCGL(transactions []Transaction, taxMethod TaxMethod) (float32, err
 		case TransactionTypeStolen:
 			continue
 		case TransactionTypeReward:
-			accumulatedCGL += transaction.Total()
+			if transaction.Category == TxCategoryWithdraw {
+				accumulatedCGL += transaction.Total()
+			}
 		case TransactionTypeFork:
 		case TransactionTypeAirdrop:
 		case TransactionTypePayment:
@@ -94,11 +96,14 @@ func AnalyseCGL(transactions []Transaction, taxMethod TaxMethod) ([]TransactionT
 		case TransactionTypeStolen:
 			continue
 		case TransactionTypeReward:
-			accumulatedCGL += transaction.Total()
-			txTaxInfo[i] = TransactionTaxInfo{
-				Transaction: transaction,
-				CGL:         transaction.Total(),
+			if transaction.Category == TxCategoryWithdraw {
+				accumulatedCGL += transaction.Total()
+				txTaxInfo[i] = TransactionTaxInfo{
+					Transaction: transaction,
+					CGL:         transaction.Total(),
+				}
 			}
+
 		case TransactionTypeFork:
 		case TransactionTypeAirdrop:
 		case TransactionTypePayment:
@@ -108,11 +113,11 @@ func AnalyseCGL(transactions []Transaction, taxMethod TaxMethod) ([]TransactionT
 			} else {
 				currencyDeposits := deposits[transaction.Currency]
 				if len(currencyDeposits) == 0 {
-					txTaxInfo = append(txTaxInfo, TransactionTaxInfo{
+					txTaxInfo[i] = TransactionTaxInfo{
 						Transaction: transaction,
 						CGL:         0,
 						Error:       ErrNoCorrespondingDepositFound,
-					})
+					}
 					continue
 				}
 
