@@ -35,6 +35,7 @@ var (
 	}
 	txn2 = []txtax.Transaction{
 		{
+			Hash:        "0",
 			TimeStamp:   0,
 			Amount:      1,
 			MarketValue: 10,
@@ -43,6 +44,7 @@ var (
 			Currency:    "ETH",
 		},
 		{
+			Hash:        "1",
 			TimeStamp:   1,
 			Amount:      1,
 			MarketValue: 100,
@@ -64,5 +66,5 @@ func Test_Analyser_Txn2_FIFO(t *testing.T) {
 	txInfo, err := txtax.AnalyseCGL(txn2, txtax.TaxMethodFIFO)
 
 	assert.Nil(t, err)
-	assert.True(t, len(txInfo) == len(txs1))
+	assert.True(t, len(txInfo) == len(txn2))
 }

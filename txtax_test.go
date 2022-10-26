@@ -37,6 +37,7 @@ var (
 	}
 	txs2 = []txtax.Transaction{
 		{
+			Hash:        "1",
 			TimeStamp:   0,
 			Amount:      1,
 			MarketValue: 10,
@@ -45,6 +46,7 @@ var (
 			Currency:    "ETH",
 		},
 		{
+			Hash:        "2",
 			TimeStamp:   1,
 			Amount:      1,
 			MarketValue: 100,

@@ -110,6 +110,10 @@ func AnalyseCGL(transactions []Transaction, taxMethod TaxMethod) ([]TransactionT
 			if transaction.Category == TxCategoryDeposit {
 				tr := transaction
 				deposits[tr.Currency] = append(deposits[tr.Currency], tr)
+				txTaxInfo[i] = TransactionTaxInfo{
+					Transaction: transaction,
+					CGL:         transaction.Total(),
+				}
 			} else {
 				currencyDeposits := deposits[transaction.Currency]
 				if len(currencyDeposits) == 0 {
