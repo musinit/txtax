@@ -171,10 +171,13 @@ func AnalyseCGL(transactions []Transaction, taxMethod TaxMethod) ([]TransactionT
 				}
 
 				accumulatedCGL += cgl
-				txTaxInfo[i] = TransactionTaxInfo{
-					Transaction: transaction,
-					CGL:         cgl,
+				if txTaxInfo[i].Error == nil {
+					txTaxInfo[i] = TransactionTaxInfo{
+						Transaction: transaction,
+						CGL:         cgl,
+					}
 				}
+
 			}
 		}
 	}

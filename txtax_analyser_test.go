@@ -100,6 +100,35 @@ var (
 			Currency:    "ETH",
 		},
 	}
+	txn4 = []txtax.Transaction{
+		{
+			Hash:        "0",
+			TimeStamp:   0,
+			Amount:      0.1,
+			MarketValue: 10,
+			Type:        txtax.TransactionTypePayment,
+			Category:    txtax.TxCategoryDeposit,
+			Currency:    "ETH",
+		},
+		{
+			Hash:        "1",
+			TimeStamp:   1,
+			Amount:      0.1,
+			MarketValue: 100,
+			Type:        txtax.TransactionTypePayment,
+			Category:    txtax.TxCategoryDeposit,
+			Currency:    "ETH",
+		},
+		{
+			Hash:        "2",
+			TimeStamp:   2,
+			Amount:      2,
+			MarketValue: 200,
+			Type:        txtax.TransactionTypePayment,
+			Category:    txtax.TxCategoryWithdraw,
+			Currency:    "ETH",
+		},
+	}
 )
 
 // 1:10  D
@@ -127,4 +156,11 @@ func Test_Analyser_Txn3_FIFO(t *testing.T) {
 
 	assert.Nil(t, err)
 	assert.True(t, len(txInfo) == len(txn3))
+}
+
+func Test_Analyser_Txn4_FIFO(t *testing.T) {
+	txInfo, err := txtax.AnalyseCGL(txn4, txtax.TaxMethodFIFO)
+
+	assert.Nil(t, err)
+	assert.True(t, len(txInfo) == len(txn4))
 }
