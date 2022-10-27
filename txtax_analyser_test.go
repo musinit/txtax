@@ -122,7 +122,7 @@ var (
 		{
 			Hash:        "2",
 			TimeStamp:   2,
-			Amount:      2,
+			Amount:      0.2,
 			MarketValue: 200,
 			Type:        txtax.TransactionTypePayment,
 			Category:    txtax.TxCategoryWithdraw,
