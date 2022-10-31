@@ -1,8 +1,10 @@
 package txtax_test
 
 import (
+	"fmt"
 	"github.com/musinit/txtax"
 	"github.com/stretchr/testify/assert"
+	"math/rand"
 	"testing"
 )
 
@@ -129,6 +131,35 @@ var (
 			Currency:    "ETH",
 		},
 	}
+	txn5 = []txtax.Transaction{
+		{
+			Hash:        "0",
+			TimeStamp:   0,
+			Amount:      0.009,
+			MarketValue: 1390,
+			Type:        txtax.TransactionTypePayment,
+			Category:    txtax.TxCategoryDeposit,
+			Currency:    "ETH",
+		},
+		{
+			Hash:        "1",
+			TimeStamp:   1,
+			Amount:      0.009,
+			MarketValue: 1522,
+			Type:        txtax.TransactionTypePayment,
+			Category:    txtax.TxCategoryDeposit,
+			Currency:    "ETH",
+		},
+		{
+			Hash:        "2",
+			TimeStamp:   2,
+			Amount:      0.009,
+			MarketValue: 1553,
+			Type:        txtax.TransactionTypePayment,
+			Category:    txtax.TxCategoryWithdraw,
+			Currency:    "ETH",
+		},
+	}
 )
 
 // 1:10  D
@@ -144,8 +175,22 @@ func Test_Analyser_Txn1_FIFO(t *testing.T) {
 	assert.True(t, len(txInfo) == len(txs1))
 }
 
+func Test_Analyser_Txn1_HIFO(t *testing.T) {
+	txInfo, err := txtax.AnalyseCGL(txn1, txtax.TaxMethodHIFO)
+
+	assert.Nil(t, err)
+	assert.True(t, len(txInfo) == len(txs1))
+}
+
 func Test_Analyser_Txn2_FIFO(t *testing.T) {
 	txInfo, err := txtax.AnalyseCGL(txn2, txtax.TaxMethodFIFO)
+
+	assert.Nil(t, err)
+	assert.True(t, len(txInfo) == len(txn2))
+}
+
+func Test_Analyser_Txn2_HIFO(t *testing.T) {
+	txInfo, err := txtax.AnalyseCGL(txn2, txtax.TaxMethodHIFO)
 
 	assert.Nil(t, err)
 	assert.True(t, len(txInfo) == len(txn2))
@@ -163,4 +208,58 @@ func Test_Analyser_Txn4_FIFO(t *testing.T) {
 
 	assert.Nil(t, err)
 	assert.True(t, len(txInfo) == len(txn4))
+}
+
+func Test_Analyser_RandomData_FIFO(t *testing.T) {
+	data := make([]txtax.Transaction, 0)
+	for i := 0; i < 500; i++ {
+		timestamp := int64(i)
+		rv := rand.Float32()
+		isDeposit := rv > 0.5
+		category := txtax.TxCategoryDeposit
+		if isDeposit {
+			category = txtax.TxCategoryWithdraw
+		}
+		t := txtax.Transaction{
+			TimeStamp:   timestamp,
+			Hash:        fmt.Sprintf("hash_%d", i),
+			Amount:      rv * 100,
+			MarketValue: rv * 1000,
+			Type:        txtax.TransactionTypePayment,
+			Category:    category,
+			Currency:    "ETH",
+			IsDisabled:  false,
+		}
+		data = append(data, t)
+	}
+	txInfo, err := txtax.AnalyseCGL(data, txtax.TaxMethodFIFO)
+	tt := make([]float32, 0)
+	for _, t := range txInfo {
+		tt = append(tt, t.CGL)
+	}
+
+	fmt.Println(tt)
+	assert.Nil(t, err)
+	assert.True(t, len(txInfo) == len(data))
+}
+
+func Test_Analyser_Txn4_HIFO(t *testing.T) {
+	txInfo, err := txtax.AnalyseCGL(txn4, txtax.TaxMethodHIFO)
+
+	assert.Nil(t, err)
+	assert.True(t, len(txInfo) == len(txn4))
+}
+
+func Test_Analyser_Txn5_FIFO(t *testing.T) {
+	txInfo, err := txtax.AnalyseCGL(txn5, txtax.TaxMethodFIFO)
+
+	assert.Nil(t, err)
+	assert.True(t, len(txInfo) == len(txn5))
+}
+
+func Test_Analyser_Txn5_LIFO(t *testing.T) {
+	txInfo, err := txtax.AnalyseCGL(txn5, txtax.TaxMethodFIFO)
+
+	assert.Nil(t, err)
+	assert.True(t, len(txInfo) == len(txn5))
 }

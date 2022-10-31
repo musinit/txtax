@@ -1,6 +1,7 @@
 package txtax
 
 import (
+	"errors"
 	"sort"
 )
 
@@ -83,10 +84,14 @@ func CalculateCGL(transactions []Transaction, taxMethod TaxMethod) (float32, err
 func AnalyseCGL(transactions []Transaction, taxMethod TaxMethod) ([]TransactionTaxInfo, error) {
 	sort.Stable(ByTimestamp(transactions))
 	var deposits = map[Currency][]Transaction{}
+	var supportDepositHash = map[string]int{}
 	accumulatedCGL := float32(0)
 	txTaxInfo := make([]TransactionTaxInfo, len(transactions))
 
+	// 0.009 0.009 0.009
+	// 0.009 0.009
 	for i, transaction := range transactions {
+		idx := i
 		if transaction.IsDisabled {
 			continue
 		}
@@ -101,6 +106,7 @@ func AnalyseCGL(transactions []Transaction, taxMethod TaxMethod) ([]TransactionT
 				txTaxInfo[i] = TransactionTaxInfo{
 					Transaction: transaction,
 					CGL:         transaction.Total(),
+					Left:        transaction.Amount,
 				}
 			}
 
@@ -110,9 +116,11 @@ func AnalyseCGL(transactions []Transaction, taxMethod TaxMethod) ([]TransactionT
 			if transaction.Category == TxCategoryDeposit {
 				tr := transaction
 				deposits[tr.Currency] = append(deposits[tr.Currency], tr)
+				supportDepositHash[transaction.Hash] = idx
 				txTaxInfo[i] = TransactionTaxInfo{
 					Transaction: transaction,
 					CGL:         0,
+					Left:        transaction.Amount,
 				}
 			} else {
 				currencyDeposits := deposits[transaction.Currency]
@@ -145,6 +153,13 @@ func AnalyseCGL(transactions []Transaction, taxMethod TaxMethod) ([]TransactionT
 					}
 					cgl += transaction.MarketValue*availableAmount - slideDepositTransaction.MarketValue*availableAmount
 					slideDepositTransaction.Amount -= availableAmount
+
+					// TODO ?? find previous transaction by hash
+					slideIDs, ok := supportDepositHash[slideDepositTransaction.Hash]
+					if !ok {
+						return nil, errors.New("can't find corresponding deposit hash in supportDeposits")
+					}
+					txTaxInfo[slideIDs].Left -= availableAmount
 
 					if len(currencyDeposits) > 1 {
 						switch taxMethod {
