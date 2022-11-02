@@ -88,8 +88,6 @@ func AnalyseCGL(transactions []Transaction, taxMethod TaxMethod) ([]TransactionT
 	accumulatedCGL := float32(0)
 	txTaxInfo := make([]TransactionTaxInfo, len(transactions))
 
-	// 0.009 0.009 0.009
-	// 0.009 0.009
 	for i, transaction := range transactions {
 		idx := i
 		if transaction.IsDisabled {
@@ -146,6 +144,7 @@ func AnalyseCGL(transactions []Transaction, taxMethod TaxMethod) ([]TransactionT
 				}
 				cgl := float32(0)
 				currTransactionAmount := transaction.Amount
+				idx := len(currencyDeposits)
 				for currTransactionAmount > 0 {
 					availableAmount := currTransactionAmount
 					if availableAmount > slideDepositTransaction.Amount {
@@ -174,8 +173,9 @@ func AnalyseCGL(transactions []Transaction, taxMethod TaxMethod) ([]TransactionT
 						}
 					}
 					currTransactionAmount -= availableAmount
+					idx--
 
-					if currTransactionAmount > 0 && len(currencyDeposits) == 0 || (currTransactionAmount != 0 && len(currencyDeposits) == 1 && currencyDeposits[0].Amount == 0) {
+					if idx == 0 || (currTransactionAmount > 0 && len(currencyDeposits) == 0 || (currTransactionAmount != 0 && len(currencyDeposits) == 1 && currencyDeposits[0].Amount == 0)) {
 						txTaxInfo[i] = TransactionTaxInfo{
 							Transaction: transaction,
 							CGL:         0,

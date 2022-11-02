@@ -263,3 +263,36 @@ func Test_Analyser_Txn5_LIFO(t *testing.T) {
 	assert.Nil(t, err)
 	assert.True(t, len(txInfo) == len(txn5))
 }
+
+func Test_Analyser_RandomData_HIFO(t *testing.T) {
+	data := make([]txtax.Transaction, 0)
+	for i := 0; i < 500; i++ {
+		timestamp := int64(i)
+		rv := rand.Float32()
+		isDeposit := rv > 0.5
+		category := txtax.TxCategoryDeposit
+		if isDeposit {
+			category = txtax.TxCategoryWithdraw
+		}
+		t := txtax.Transaction{
+			TimeStamp:   timestamp,
+			Hash:        fmt.Sprintf("hash_%d", i),
+			Amount:      rv * 100,
+			MarketValue: rv * 1000,
+			Type:        txtax.TransactionTypePayment,
+			Category:    category,
+			Currency:    "ETH",
+			IsDisabled:  false,
+		}
+		data = append(data, t)
+	}
+	txInfo, err := txtax.AnalyseCGL(data, txtax.TaxMethodHIFO)
+	tt := make([]float32, 0)
+	for _, t := range txInfo {
+		tt = append(tt, t.CGL)
+	}
+
+	fmt.Println(tt)
+	assert.Nil(t, err)
+	assert.True(t, len(txInfo) == len(data))
+}
