@@ -153,7 +153,6 @@ func AnalyseCGL(transactions []Transaction, taxMethod TaxMethod) ([]TransactionT
 					cgl += transaction.MarketValue*availableAmount - slideDepositTransaction.MarketValue*availableAmount
 					slideDepositTransaction.Amount -= availableAmount
 
-					// TODO ?? find previous transaction by hash
 					slideIDs, ok := supportDepositHash[slideDepositTransaction.Hash]
 					if !ok {
 						return nil, errors.New("can't find corresponding deposit hash in supportDeposits")
@@ -175,7 +174,7 @@ func AnalyseCGL(transactions []Transaction, taxMethod TaxMethod) ([]TransactionT
 					currTransactionAmount -= availableAmount
 					idx--
 
-					if idx == 0 || (currTransactionAmount > 0 && len(currencyDeposits) == 0 || (currTransactionAmount != 0 && len(currencyDeposits) == 1 && currencyDeposits[0].Amount == 0)) {
+					if idx < 0 || (currTransactionAmount > 0 && len(currencyDeposits) == 0 || (currTransactionAmount != 0 && len(currencyDeposits) == 1 && currencyDeposits[0].Amount == 0)) {
 						txTaxInfo[i] = TransactionTaxInfo{
 							Transaction: transaction,
 							CGL:         0,
