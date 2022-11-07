@@ -9,6 +9,7 @@ type Transaction struct {
 	Category    TxCategory      `json:"category"`
 	Currency    Currency        `json:"currency"`
 	IsDisabled  bool            `json:"isActive"`
+	Gas         float32         `json:"gas"` // amount of fee in $ that was used for transaction
 }
 
 type TransactionType string
@@ -41,7 +42,7 @@ var (
 type Currency string
 
 func (t *Transaction) Total() float32 {
-	return t.Amount * t.MarketValue
+	return t.Amount*t.MarketValue - t.Gas
 }
 
 func GetHIFOTransactionIDx(transactions []Transaction) int {

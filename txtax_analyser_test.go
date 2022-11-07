@@ -160,6 +160,38 @@ var (
 			Currency:    "ETH",
 		},
 	}
+	txn6 = []txtax.Transaction{
+		{
+			Hash:        "0",
+			TimeStamp:   0,
+			Amount:      1,
+			MarketValue: 100,
+			Type:        txtax.TransactionTypePayment,
+			Category:    txtax.TxCategoryDeposit,
+			Currency:    "ETH",
+			Gas:         1,
+		},
+		{
+			Hash:        "1",
+			TimeStamp:   1,
+			Amount:      1,
+			MarketValue: 1000,
+			Type:        txtax.TransactionTypePayment,
+			Category:    txtax.TxCategoryDeposit,
+			Currency:    "ETH",
+			Gas:         1,
+		},
+		{
+			Hash:        "2",
+			TimeStamp:   2,
+			Amount:      1,
+			MarketValue: 2000,
+			Type:        txtax.TransactionTypePayment,
+			Category:    txtax.TxCategoryWithdraw,
+			Currency:    "ETH",
+			Gas:         1,
+		},
+	}
 )
 
 // 1:10  D
@@ -295,4 +327,11 @@ func Test_Analyser_RandomData_HIFO(t *testing.T) {
 	fmt.Println(tt)
 	assert.Nil(t, err)
 	assert.True(t, len(txInfo) == len(data))
+}
+
+func Test_Analyser_Txn6_LIFO(t *testing.T) {
+	txInfo, err := txtax.AnalyseCGL(txn6, txtax.TaxMethodFIFO)
+
+	assert.Nil(t, err)
+	assert.True(t, len(txInfo) == len(txn6))
 }

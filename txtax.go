@@ -150,7 +150,7 @@ func AnalyseCGL(transactions []Transaction, taxMethod TaxMethod) ([]TransactionT
 					if availableAmount > slideDepositTransaction.Amount {
 						availableAmount = slideDepositTransaction.Amount
 					}
-					cgl += transaction.MarketValue*availableAmount - slideDepositTransaction.MarketValue*availableAmount
+					cgl += transaction.MarketValue*availableAmount - slideDepositTransaction.MarketValue*availableAmount - slideDepositTransaction.Gas
 					slideDepositTransaction.Amount -= availableAmount
 
 					slideIDs, ok := supportDepositHash[slideDepositTransaction.Hash]
@@ -188,7 +188,7 @@ func AnalyseCGL(transactions []Transaction, taxMethod TaxMethod) ([]TransactionT
 				if txTaxInfo[i].Error == nil {
 					txTaxInfo[i] = TransactionTaxInfo{
 						Transaction: transaction,
-						CGL:         cgl,
+						CGL:         cgl - transaction.Gas,
 					}
 				}
 
