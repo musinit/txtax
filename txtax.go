@@ -94,10 +94,10 @@ func AnalyseCGL(transactions []Transaction, taxMethod TaxMethod) ([]TransactionT
 			continue
 		}
 		switch transaction.Type {
-		case TransactionTypeGift:
-		case TransactionTypeDonation:
 		case TransactionTypeStolen:
 			continue
+		case TransactionTypeDonation:
+		case TransactionTypeGift:
 		case TransactionTypeReward:
 			if transaction.Category == TxCategoryWithdraw {
 				accumulatedCGL += transaction.Total()
