@@ -41,6 +41,13 @@ var (
 
 type Currency string
 
+type TaxOptions struct {
+	TaxMethod   TaxMethod
+	IncomeTypes map[TransactionType]struct{} // taxable events: deposits only
+	CGLTypes    map[TransactionType]struct{} // taxable events: withdraws only
+	SkipTypes   map[TransactionType]struct{} // don't do anything
+}
+
 func (t *Transaction) Total() float32 {
 	return t.Amount*t.MarketValue - t.Gas
 }
